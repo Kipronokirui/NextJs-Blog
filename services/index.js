@@ -79,4 +79,53 @@ export const getSimilarPosts = async (categories, s) => {
     const result = await request(graphqlAPI, query, { s, categories });
   
     return result.posts;
-  };
+};
+  
+export const getCategories = async () => {
+  const query = gql`
+    query GetGategories {
+        categories {
+          name
+          slug
+        }
+    }
+  `;
+
+  const result = await request(graphqlAPI, query);
+
+  return result.categories;
+};
+
+export const getPostDetails = async (s) => {
+  const query = gql`
+    query GetPostDetails($s : String!) {
+      post(where: {s: $s}) {
+        title
+        excerpt
+        featuredImage {
+          url
+        }
+        author{
+          name
+          bio
+          photo {
+            url
+          }
+        }
+        createdAt
+        s
+        content {
+          raw
+        }
+        categories {
+          name
+          slug
+        }
+      }
+    }
+  `;
+
+  const result = await request(graphqlAPI, query, { s });
+
+  return result.post;
+};
